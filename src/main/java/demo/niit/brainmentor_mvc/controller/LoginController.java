@@ -1,5 +1,8 @@
 package demo.niit.brainmentor_mvc.controller;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -11,12 +14,11 @@ import demo.niit.brainmentor_mvc.entity.User;
 import demo.niit.brainmentor_mvc.service.LoginService;
 import demo.niit.brainmentor_mvc.utility.AppUtility;
 
-
-
 @Controller
 public class LoginController {
 	@Autowired
 	private LoginService loginService;
+	private final static Logger logger = Logger.getLogger(LoginController.class.getName());
 
 	@RequestMapping(value = "login", method = RequestMethod.POST)
 	public ModelAndView processLogin(@ModelAttribute User user) {
@@ -28,7 +30,7 @@ public class LoginController {
 			loginUser = loginService.getStudent(user);
 			break;
 		case AppUtility.ADMIN_ROLEID:
-			loginUser = loginService.getStudent(user);
+			loginUser = loginService.getAdmin(user);
 			break;
 		default:
 			return model;
@@ -44,22 +46,20 @@ public class LoginController {
 		return model;
 	}
 
-	@RequestMapping(value = "home_page", method = RequestMethod.GET)
+	@RequestMapping(value = { "/" }, method = RequestMethod.GET)
 	public ModelAndView viewHomePage(@ModelAttribute User user) {
+		logger.log(Level.ALL, "hello gets hit!");
 		return new ModelAndView("home_page");
 	}
-	
+
 	@RequestMapping(value = "login_page", method = RequestMethod.GET)
 	public ModelAndView viewLoginPage(@ModelAttribute User user) {
 		return new ModelAndView("login_page");
 	}
+
 	@RequestMapping(value = "register_page", method = RequestMethod.GET)
 	public ModelAndView viewRegisterPage(@ModelAttribute User user) {
 		return new ModelAndView("register_page");
 	}
-	
-	
-	
-	
 
 }
